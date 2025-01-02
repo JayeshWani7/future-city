@@ -1,89 +1,91 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { auth, db } from "@/config/firebaseConfig"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
-import { doc, setDoc, getDoc } from "firebase/firestore"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Loader2 } from 'lucide-react'
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/config/firebaseConfig";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
 export default function AuthPage() {
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [user, setUser] = useState<any>(null)
-  const [userRole, setUserRole] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      router.push("/")
+    if (user && userRole === "admin") {
+      router.push("/admin");
+    } else if (user && userRole === "user") {
+      router.push("/user");
     }
-  }, [user, router])
+  }, [user, userRole, router]);
 
   const toggleAuthMode = () => {
-    setIsSignUp(!isSignUp)
-    setError(null)
-  }
+    setIsSignUp(!isSignUp);
+    setError(null);
+  };
 
   const handleSignUp = async () => {
-    setError(null)
-    setIsLoading(true)
+    setError(null);
+    setIsLoading(true);
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password)
-      const { uid } = result.user
-      const role = "user"
-      await setDoc(doc(db, "users", uid), { email, role })
-      setUser(result.user)
-      setUserRole(role)
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = result.user;
+      const role = "user"; // Default role as user
+      await setDoc(doc(db, "users", uid), { email, role });
+      setUser(result.user);
+      setUserRole(role);
     } catch (err: any) {
-      setError(err.message || "Sign Up failed. Please try again.")
+      setError(err.message || "Sign Up failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSignIn = async () => {
-    setError(null)
-    setIsLoading(true)
+    setError(null);
+    setIsLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password)
-      const { uid } = result.user
-      const userDocRef = doc(db, "users", uid)
-      const userDoc = await getDoc(userDocRef)
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const { uid } = result.user;
+      const userDocRef = doc(db, "users", uid);
+      const userDoc = await getDoc(userDocRef);
 
       if (userDoc.exists()) {
-        const userData = userDoc.data()
-        setUser(result.user)
-        setUserRole(userData?.role || null)
+        const userData = userDoc.data();
+        setUser(result.user);
+        setUserRole(userData?.role || null);
       } else {
-        throw new Error("User role not found in database.")
+        throw new Error("User role not found in database.");
       }
     } catch (err: any) {
-      setError(err.message || "Sign In failed. Please try again.")
+      setError(err.message || "Sign In failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleLogout = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await signOut(auth)
-      setUser(null)
-      setUserRole(null)
+      await signOut(auth);
+      setUser(null);
+      setUserRole(null);
     } catch (err: any) {
-      setError(err.message || "Logout failed. Please try again.")
+      setError(err.message || "Logout failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#1a0b2e" }}>
@@ -158,9 +160,7 @@ export default function AuthPage() {
             <h2 className="text-xl font-semibold text-white">
               Welcome, {user.email}
             </h2>
-            <p className="text-white/70">
-              You are logged in as: {userRole}
-            </p>
+            <p className="text-white/70">You are logged in as: {userRole}</p>
           </div>
           <div>
             {userRole === "admin" && (
@@ -193,5 +193,5 @@ export default function AuthPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

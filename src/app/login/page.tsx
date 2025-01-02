@@ -25,7 +25,7 @@ export default function AuthPage() {
     if (user && userRole === "admin") {
       router.push("/admin");
     } else if (user && userRole === "user") {
-      router.push("/user");
+      router.push("/report");
     }
   }, [user, userRole, router]);
 

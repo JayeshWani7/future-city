@@ -32,10 +32,6 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-[#1a0b2e]`}>
         <Header />
-<<<<<<< HEAD
-=======
-       
->>>>>>> a1824cb6a882faa07dfa0ed1da29544687ed4c4d
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

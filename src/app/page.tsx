@@ -1,101 +1,133 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { auth, db } from "../config/firebaseConfig"; // Import Firebase config
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+
+export default function AuthPage() {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const toggleAuthMode = () => {
+    setIsSignUp(!isSignUp);
+    setError(null);
+  };
+
+  const handleSignUp = async () => {
+    setError(null); // Clear previous errors
+    try {
+      // Create a new user in Firebase Authentication
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = result.user;
+
+      // Default role for all new users will be 'user'
+      const role = "user";
+
+      // Store user role in Firestore
+      await setDoc(doc(db, "users", uid), { email, role });
+
+      setUser(result.user);
+      setUserRole(role);
+    } catch (err: any) {
+      setError(err.message || "Sign Up failed. Please try again.");
+    }
+  };
+
+  const handleSignIn = async () => {
+    setError(null); // Clear previous errors
+    try {
+      // Authenticate existing user in Firebase Authentication
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const { uid } = result.user;
+
+      // Fetch user role from Firestore
+      const userDocRef = doc(db, "users", uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUser(result.user);
+        setUserRole(userData?.role || null);
+      } else {
+        throw new Error("User role not found in database.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Sign In failed. Please try again.");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserRole(null);
+    } catch (err: any) {
+      setError(err.message || "Logout failed. Please try again.");
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div>
+      {!user ? (
+        <div style={{ maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
+          <h1>{isSignUp ? "Sign Up" : "Sign In"}</h1>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ display: "block", margin: "10px auto", padding: "8px", width: "100%" }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ display: "block", margin: "10px auto", padding: "8px", width: "100%" }}
+          />
+          {/* No role selection on Sign Up */}
+          <button
+            onClick={isSignUp ? handleSignUp : handleSignIn}
+            style={{ padding: "10px 20px", marginTop: "10px" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </button>
+          <p>
+            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+            <button onClick={toggleAuthMode} style={{ textDecoration: "underline", color: "blue", background: "none", border: "none" }}>
+              {isSignUp ? "Sign In" : "Sign Up"}
+            </button>
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <p>Welcome, {user.email}!</p>
+          <p>Your Role: {userRole}</p>
+          <button onClick={handleLogout} style={{ padding: "10px 20px", margin: "10px" }}>
+            Logout
+          </button>
+
+          {userRole === "admin" && (
+            <div>
+              <h2>Admin Dashboard</h2>
+              <p>Manage users and access administrative features here.</p>
+            </div>
+          )}
+
+          {userRole === "user" && (
+            <div>
+              <h2>User Dashboard</h2>
+              <p>Access your personalized content and features here.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

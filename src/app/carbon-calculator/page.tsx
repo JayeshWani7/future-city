@@ -1,10 +1,11 @@
-export default function CarbonCalculator() {
+import { CarbonCalculator } from "@/components/carbon-calculator";
+
+export default function Carbon() {
   return (
-    <div className="container py-10">
-      <h1 className="text-3xl font-bold mb-4">Carbon Calculator</h1>
-      <div className="rounded-lg border bg-card p-8 text-card-foreground">
-        Carbon calculator implementation will go here
-      </div>
+    <div className="container pt-10  py-10">
+            <CarbonCalculator />
+
+      
     </div>
   )
 }

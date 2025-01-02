@@ -35,7 +35,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 font-bold text-white">
           <Building2 className="h-6 w-6" />
-          <span className="text-xl">SmartCity</span>
+          <span className="text-xl">NextCity</span>
         </div>
         <MainNav />
         {user ? (

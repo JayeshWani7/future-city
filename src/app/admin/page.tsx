@@ -11,11 +11,11 @@ interface Complaint {
   description: string;
   location: string;
   status: string;
-  createdAt: Timestamp; // Use 'Timestamp' from Firestore if needed
+  createdAt: Timestamp;
 }
 
 export default function AdminDashboard() {
-  const [complaints, setComplaints] = useState<Complaint[]>([]); // Explicitly set the type
+  const [complaints, setComplaints] = useState<Complaint[]>([]);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
         const complaintsData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as Complaint[]; // Cast to the Complaint type
+        })) as Complaint[];
         setComplaints(complaintsData);
       } catch (error) {
         console.error("Error fetching complaints:", error);
@@ -33,6 +33,15 @@ export default function AdminDashboard() {
 
     fetchComplaints();
   }, []);
+
+  const updateStatusLocally = (id: string, newStatus: string) => {
+    setComplaints((prevComplaints) =>
+      prevComplaints.map((complaint) =>
+        complaint.id === id ? { ...complaint, status: newStatus } : complaint
+      )
+    );
+    alert(`Status for complaint ${id} updated to ${newStatus}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4">
@@ -48,6 +57,7 @@ export default function AdminDashboard() {
                 <th className="px-4 py-3">Description</th>
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -72,6 +82,17 @@ export default function AdminDashboard() {
                       {complaint.status}
                     </span>
                   </td>
+                  <td className="px-4 py-3">
+                    <select
+                      value={complaint.status}
+                      onChange={(e) => updateStatusLocally(complaint.id, e.target.value)}
+                      className="text-xs rounded bg-gray-700 text-white p-1"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -81,4 +102,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-  

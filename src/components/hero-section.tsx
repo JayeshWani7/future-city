@@ -36,7 +36,7 @@ export function HeroSection() {
             Building Smart Cities for a Connected Future
           </h1>
           <p className="mt-6 text-lg text-white/70 transition-colors duration-300 hover:text-white/90">
-            Transform urban living with cutting-edge technology. Our smart city solutions 
+            Transform urban living with cutting-edge technology. Our Future city solutions 
             integrate sustainability, safety, and convenience for a better tomorrow.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">

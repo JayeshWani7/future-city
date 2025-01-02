@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { db } from "@/config/firebaseConfig";
-import { collection, getDocs, Timestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/config/firebaseConfig";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { collection, getDocs, doc, getDoc, Timestamp } from "firebase/firestore";
 
-// Define the type for complaint objects
 interface Complaint {
   id: string;
   category: string;
@@ -15,7 +16,41 @@ interface Complaint {
 }
 
 export default function AdminDashboard() {
+  const [user, loading] = useAuthState(auth);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      if (loading) return; // Wait for user authentication to load
+
+      if (!user) {
+        router.push("/login"); // Redirect to login if user is not authenticated
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          if (userData.role === "admin") {
+            setIsAdmin(true); // Allow access if the role is admin
+          } else {
+            router.push("/user"); // Redirect to user dashboard if not admin
+          }
+        } else {
+          console.error("User document not found");
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        router.push("/login");
+      }
+    };
+
+    checkAdminRole();
+  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -31,17 +66,10 @@ export default function AdminDashboard() {
       }
     };
 
-    fetchComplaints();
-  }, []);
+    if (isAdmin) fetchComplaints();
+  }, [isAdmin]);
 
-  const updateStatusLocally = (id: string, newStatus: string) => {
-    setComplaints((prevComplaints) =>
-      prevComplaints.map((complaint) =>
-        complaint.id === id ? { ...complaint, status: newStatus } : complaint
-      )
-    );
-    alert(`Status for complaint ${id} updated to ${newStatus}`);
-  };
+  if (!isAdmin) return null; // Do not render the page if the user is not admin
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4">
@@ -85,7 +113,15 @@ export default function AdminDashboard() {
                   <td className="px-4 py-3">
                     <select
                       value={complaint.status}
-                      onChange={(e) => updateStatusLocally(complaint.id, e.target.value)}
+                      onChange={(e) =>
+                        setComplaints((prev) =>
+                          prev.map((c) =>
+                            c.id === complaint.id
+                              ? { ...c, status: e.target.value }
+                              : c
+                          )
+                        )
+                      }
                       className="text-xs rounded bg-gray-700 text-white p-1"
                     >
                       <option value="pending">Pending</option>

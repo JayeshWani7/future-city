@@ -2,20 +2,106 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes gradient {
+  0% {
+    transform: translate(0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10%, 10%) rotate(180deg);
+  }
+  100% {
+    transform: translate(0) rotate(360deg);
+  }
+}
+
+.animate-gradient-slow {
+  animation: gradient 15s linear infinite;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --spacing-small: 0.5rem; /* Small spacing */
+    --spacing-base: 1rem;   /* Base spacing */
+    --spacing-large: 2rem;  /* Large spacing */
+  }
+
+  /* Margin Utilities */
+  .ml-small {
+    margin-left: var(--spacing-small);
+  }
+
+  .ml-base {
+    margin-left: var(--spacing-base);
+  }
+
+  .ml-large {
+    margin-left: var(--spacing-large);
+  }
+
+  .mr-small {
+    margin-right: var(--spacing-small);
+  }
+
+  .mr-base {
+    margin-right: var(--spacing-base);
+  }
+
+  .mr-large {
+    margin-right: var(--spacing-large);
+  }
+
+  /* Padding Utilities */
+  .pl-small {
+    padding-left: var(--spacing-small);
+  }
+
+  .pl-base {
+    padding-left: var(--spacing-base);
+  }
+
+  .pl-large {
+    padding-left: var(--spacing-large);
+  }
+
+  .pr-small {
+    padding-right: var(--spacing-small);
+  }
+
+  .pr-base {
+    padding-right: var(--spacing-base);
+  }
+
+  .pr-large {
+    padding-right: var(--spacing-large);
+  }
 }

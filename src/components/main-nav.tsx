@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Calculator, MapPin, Shield } from 'lucide-react'
+import { BriefcaseMedical, Calculator, MapPin, Shield } from 'lucide-react'
 
 export function MainNav() {
   const pathname = usePathname()
@@ -26,6 +26,12 @@ export function MainNav() {
       label: "Nearby Amenities",
       icon: MapPin,
       active: pathname === "/nearby-amenities",
+    },
+    {
+      href: "/health",
+      label: "Health",
+      icon: BriefcaseMedical,
+      active: pathname === "/health",
     },
   ]
 

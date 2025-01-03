@@ -37,7 +37,7 @@ export default function AdminDashboard() {
           if (userData.role === "admin") {
             setIsAdmin(true); // Allow access if the role is admin
           } else {
-            router.push("/user"); // Redirect to user dashboard if not admin
+            router.push("/report"); // Redirect to user dashboard if not admin
           }
         } else {
           console.error("User document not found");

@@ -34,7 +34,7 @@ export function Header() {
     <header className="fixed px-20 top-0 z-50 w-full border-b border-white/10 bg-black/5 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 font-bold text-white">
-          <Building2 className="h-6 w-6" />
+          <Building2 onClick={() => router.push("/")} className="h-6 w-6" />
           <span className="text-xl">NextCity</span>
         </div>
         <MainNav />

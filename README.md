@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Futuristic Urban AI  
 
-## Getting Started
+## Overview  
+Futuristic Urban AI is an innovative web application designed to tackle urban challenges using artificial intelligence and modern web technologies. The project includes four main features: carbon footprint detection, health analysis, citizen assistance, and an emergency SOS system for women’s safety.  
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Carbon Footprint Detection**  
+   - Allows users to calculate the carbon emissions generated between a given source and destination.  
+   - Promotes awareness of environmental impact and encourages sustainable travel.  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Health Scanner**  
+   - Scans food items to assess their healthiness.  
+   - Provides users with actionable insights into their dietary choices.  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Citizen Assistance**  
+   - A platform for citizens to register their complaints.  
+   - These complaints are visible to the government for quicker resolutions.  
 
-## Learn More
+4. **Emergency SOS System for Women**  
+   - Provides a reliable safety system for women by sending real-time location data to emergency contacts or authorities.  
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Frontend Framework:** [Next.js](https://nextjs.org/)  
+- **UI Components:** [ShadCN](https://shadcn.dev/)  
+- **Backend & Database:** [Firebase](https://firebase.google.com/)  
+- **AI Integration:** Gemini API  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Installation  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Follow these steps to set up the project locally:  
+
+1. Clone the repository:  
+   ```bash  
+   git clone https://github.com/your-username/futuristic-urban-ai.git  
+   cd futuristic-urban-ai  
+

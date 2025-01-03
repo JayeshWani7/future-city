@@ -10,7 +10,8 @@ export async function POST(req: Request) {
 
     const prompt = `Analyze the following food ingredients: ${ingredients}. 
     Provide a brief nutritional score out of 10, list key nutrients, potential health benefits, and any concerns. 
-    Then suggest 2-3 healthier alternatives if applicable. Format the response in markdown.`
+    Then suggest 2-3 healthier alternatives if applicable. Format the response in markdown.
+    Start the response with "Nutritional score: [X]/10" where X is the score.`
 
     const result = await model.generateContent(prompt)
     const response = await result.response

@@ -40,7 +40,7 @@ export default function AdminDashboard() {
         complaint.id === id ? { ...complaint, status: newStatus } : complaint
       )
     );
-    alert(`Status for complaint ${id} updated to ${newStatus}`);
+    alert(`Status ${id} updated to ${newStatus}`);
   };
 
   return (

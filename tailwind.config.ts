@@ -55,6 +55,25 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		animation: {
+  			gradient: 'gradient 8s linear infinite',
+  			'shiny-text': 'shiny-text 8s infinite'
+  		},
+  		keyframes: {
+  			gradient: {
+  				to: {
+  					backgroundPosition: 'var(--bg-size) 0'
+  				}
+  			},
+  			'shiny-text': {
+  				'0%, 90%, 100%': {
+  					'background-position': 'calc(-100% - var(--shiny-width)) 0'
+  				},
+  				'30%, 60%': {
+  					'background-position': 'calc(100% + var(--shiny-width)) 0'
+  				}
+  			}
   		}
   	}
   },

@@ -1,5 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Calculator, MapPin, Shield } from 'lucide-react'
+import BlurIn from "@/components/ui/blur-in";
+import AnimatedGridPattern from "@/components/ui/animated-grid-pattern";
+import { cn } from "@/lib/utils";
+
 
 export function HeroSection() {
   const floatingIcons = [
@@ -10,7 +14,16 @@ export function HeroSection() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#1a0b2e]">
-     
+     <AnimatedGridPattern
+        numSquares={30}
+        maxOpacity={0.1}
+        duration={3}
+        repeatDelay={1}
+        className={cn(
+          "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
+          "inset-x-0 inset-y-[-30%] h-[170%] skew-y-12",
+        )}
+      />
     
    
       
@@ -32,9 +45,13 @@ export function HeroSection() {
           <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-white/70 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/10">
             AI-Powered Urban Planning Solutions
           </div>
-          <h1 className="mt-8 bg-gradient-to-r from-white to-white/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent transition-all duration-300 hover:from-white hover:to-white/90 md:text-7xl">
-            Building Smart Cities for a Connected Future
-          </h1>
+          
+           <BlurIn
+      word="Building Smart Cities for a Connected Future"
+       className="mt-8 bg-gradient-to-r from-white to-white/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent transition-all duration-300 hover:from-white hover:to-white/90 md:text-7xl"></BlurIn>
+            
+          
+    
           <p className="mt-6 text-lg text-white/70 transition-colors duration-300 hover:text-white/90">
             Transform urban living with cutting-edge technology. Our Future city solutions 
             integrate sustainability, safety, and convenience for a better tomorrow.

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import { auth } from "@/config/firebaseConfig"
 import { onAuthStateChanged, signOut } from "firebase/auth"
 import { useRouter } from "next/navigation"
+import { CoolMode } from "./ui/cool-mode"
 
 export function Header() {
   const [user, setUser] = useState<any>(null)
@@ -48,13 +49,16 @@ export function Header() {
           </Button>
         ) : (
           <Link href="/login">
-            <Button
-              variant="ghost"
-              className="text-white hover:text-white/80 rounded-lg"
-            >
-              Login
-            </Button>
-          </Link>
+  <CoolMode>
+    <Button
+      variant="ghost"
+      className="bg-gradient-to-r from-[#2d2640] via-[#1a1625] to-[#2d2640] text-white px-8 py-4 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl hover:from-red-500 hover:via-pink-500 hover:to-red-600"
+    >
+      Login
+    </Button>
+  </CoolMode>
+</Link>
+        
         )}
       </div>
     </header>
